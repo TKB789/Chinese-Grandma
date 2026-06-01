@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Chinese Grandma Says</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;900&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1a1310;
+    --bg-card:#241a16;
+    --paper:#f4ebda;
+    --ink:#f2e8d5;
+    --ink-soft:#b8a888;
+    --seal:#d14237;
+    --seal-deep:#9a2a22;
+    --gold:#d8a94e;
+    --hot:#e05442;
+    --warm:#e8a24d;
+    --neutral:#a9be84;
+    --cool:#6fb4c6;
+    --cold:#5a8fc4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{color-scheme:dark;background:#1a1310}
+  body{
+    font-family:'Spectral',Georgia,serif;
+    color:var(--ink);
+    background:#1a1310;
+    background-image:
+      radial-gradient(circle at 20% 8%, rgba(209,66,55,.18), transparent 42%),
+      radial-gradient(circle at 85% 85%, rgba(216,169,78,.12), transparent 45%);
+    min-height:100vh;
+    line-height:1.6;
+    position:relative;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:48px 24px 80px;position:relative;z-index:1}
+  header{text-align:center;margin-bottom:40px}
+  .seal{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:84px;height:84px;background:var(--seal);color:var(--paper);
+    font-family:'Ma Shan Zheng',cursive;font-size:46px;border-radius:8px;
+    box-shadow:0 6px 0 var(--seal-deep), 0 12px 24px rgba(138,36,31,.3);
+    transform:rotate(-3deg);margin-bottom:24px;
+  }
+  h1{
+    font-family:'Noto Serif SC',serif;font-weight:900;font-size:clamp(34px,7vw,52px);
+    letter-spacing:-1px;line-height:1.1;color:var(--gold);
+  }
+  h1 .zh{font-family:'Ma Shan Zheng',cursive;color:var(--seal);font-weight:400;display:block;font-size:.6em;margin-top:6px}
+  .tag{color:var(--ink-soft);font-style:italic;margin-top:14px;font-size:18px}
+  .search{
+    margin:38px 0;display:flex;gap:10px;flex-wrap:wrap;
+  }
+  .search input{
+    flex:1;min-width:200px;padding:16px 20px;font-family:'Spectral',serif;font-size:18px;
+    border:2px solid var(--gold);background:#2e221c;color:var(--ink);
+    border-radius:2px;outline:none;transition:.2s;
+  }
+  .search input::placeholder{color:var(--ink-soft);opacity:1}
+  .search input:focus{border-color:var(--seal);background:#382820;box-shadow:0 0 0 3px rgba(209,66,55,.25)}
+  .search button{
+    padding:16px 28px;background:var(--seal);color:var(--paper);border:none;cursor:pointer;
+    font-family:'Noto Serif SC',serif;font-weight:600;font-size:17px;border-radius:2px;
+    box-shadow:0 4px 0 var(--seal-deep);transition:.1s;
+  }
+  .search button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--seal-deep)}
+  .browse{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
+  .nat-btn{
+    padding:9px 18px;border:none;border-radius:30px;cursor:pointer;color:#fff;
+    font-family:'Noto Serif SC',serif;font-weight:600;font-size:15px;transition:.15s;
+    display:inline-flex;align-items:center;gap:7px;opacity:.92;
+  }
+  .nat-btn:hover{opacity:1;transform:translateY(-1px)}
+  .nat-btn.active{box-shadow:0 0 0 3px var(--bg),0 0 0 5px currentColor}
+  .nat-btn .caret{font-size:11px;transition:transform .2s}
+  .nat-btn.active .caret{transform:rotate(180deg)}
+  .nb-hot{background:var(--hot)} .nb-warm{background:var(--warm)}
+  .nb-neutral{background:var(--neutral)} .nb-cool{background:var(--cool)} .nb-cold{background:var(--cold)}
+  .dropdown-wrap{margin-bottom:30px}
+  .dropdown{
+    background:var(--bg-card);border:1px solid var(--gold);border-radius:6px;padding:14px;
+    margin-top:6px;display:flex;flex-direction:column;gap:0;
+    max-height:320px;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    animation:rise .3s ease both;
+  }
+  .dropdown::-webkit-scrollbar{width:8px}
+  .dropdown::-webkit-scrollbar-thumb{background:var(--ink-soft);border-radius:4px}
+  .dropdown .dd-label{position:sticky;top:-14px;background:var(--bg-card);padding:6px 0 10px;z-index:1;text-align:center;color:var(--ink-soft);font-style:italic;font-size:14px}
+  .food-opt{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 14px;border:none;border-bottom:1px solid rgba(184,168,136,.18);cursor:pointer;
+    font-size:16px;color:var(--ink);background:transparent;transition:.12s;border-radius:4px;
+  }
+  .food-opt:last-child{border-bottom:none}
+  .food-opt:hover{background:var(--gold);color:#1a1310}
+  .food-opt .zh{color:var(--ink-soft);font-size:15px}
+  .food-opt:hover .zh{color:#4a3208}
+  .card{
+    background:var(--bg-card);border:1px solid var(--gold);border-radius:4px;
+    padding:30px;margin-bottom:22px;position:relative;
+    box-shadow:0 10px 30px rgba(0,0,0,.4);
+    animation:rise .45s cubic-bezier(.2,.8,.3,1) both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .card-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .food-name{font-family:'Noto Serif SC',serif;font-weight:900;font-size:30px;flex:1;min-width:140px}
+  .food-name .zh{font-family:'Ma Shan Zheng',cursive;color:var(--ink-soft);font-weight:400;font-size:.7em;margin-left:8px}
+  .nature{
+    padding:8px 18px;border-radius:30px;color:#fff;font-family:'Noto Serif SC',serif;
+    font-weight:600;font-size:16px;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;
+  }
+  .nature .dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.85)}
+  .n-hot{background:var(--hot)} .n-warm{background:var(--warm)}
+  .n-neutral{background:var(--neutral)} .n-cool{background:var(--cool)} .n-cold{background:var(--cold)}
+  .meter{height:10px;border-radius:6px;margin:22px 0 6px;
+    background:linear-gradient(90deg,var(--cold),var(--cool),var(--neutral),var(--warm),var(--hot));position:relative}
+  .meter .pin{position:absolute;top:-6px;width:4px;height:22px;background:#fff;border-radius:2px;transform:translateX(-50%);box-shadow:0 0 0 3px var(--bg-card)}
+  .meter-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);letter-spacing:1px}
+  .section-label{font-family:'Noto Serif SC',serif;font-weight:600;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin:26px 0 12px;display:flex;align-items:center;gap:10px}
+  .section-label::after{content:"";flex:1;height:1px;background:var(--ink-soft);opacity:.3}
+  .desc{font-style:italic;color:var(--ink-soft);font-size:17px}
+  .balance-grid{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .balance-item{
+    padding:9px 16px;background:#33251e;border:1px solid var(--ink-soft);border-radius:3px;color:var(--ink);
+    font-size:15px;cursor:pointer;transition:.15s;
+  }
+  .balance-item:hover{background:var(--gold);color:#1a1310;border-color:var(--gold)}
+  .grandma{margin-top:20px;padding:18px 20px;background:rgba(216,169,78,.12);border-left:4px solid var(--gold);font-style:italic;font-size:17px}
+  .grandma b{font-style:normal;font-family:'Ma Shan Zheng',cursive;color:var(--seal);font-size:20px}
+  .empty{text-align:center;color:var(--ink-soft);font-style:italic;padding:30px;font-size:18px}
+  footer{text-align:center;margin-top:40px;color:var(--ink-soft);font-size:13px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="seal">婆</div>
+    <h1>Chinese Grandma Says<span class="zh">外婆说</span></h1>
+    <p class="tag">Type a food. I'll tell you if it's hot or cold — and what to eat with it.</p>
+  </header>
+
+  <div class="search">
+    <input id="q" type="text" placeholder="e.g. ginger, watermelon, lamb, tofu…" autocomplete="off">
+    <button onclick="lookup()">Ask Grandma</button>
+  </div>
+  <div class="browse" id="browse"></div>
+  <div class="dropdown-wrap" id="dropdownWrap"></div>
+
+  <div id="results"></div>
+
+  <footer>
+    Based on traditional Chinese medicine (TCM) food energetics — the five natures (五性): hot 热, warm 温, neutral 平, cool 凉, cold 寒.<br>
+    For wellness curiosity, not medical advice. When in doubt, ask your actual grandma — or a doctor.
+  </footer>
+</div>
+
+<script>
+// nature: 5-point scale -2 cold, -1 cool, 0 neutral, 1 warm, 2 hot
+const DB = {
+  // ===== HOT (n:2) =====
+  chili:{zh:"辣椒",n:2,desc:"Very hot — opens the pores and gets the blood moving.",balance:["cucumber","mung bean","yogurt"],tip:"Pair with something cooling or you'll have 上火 (shàng huǒ — 'internal heat': sore throat, breakouts, irritability) by morning."},
+  cinnamon:{zh:"肉桂",n:2,desc:"Hot — warms the core and the kidneys.",balance:["chrysanthemum tea","pear","mung bean"],tip:""},
+  blackpepper:{zh:"胡椒",n:2,desc:"Hot and pungent — dispels cold from the stomach.",balance:["cucumber","tofu"],tip:""},
+  drygiinger:{zh:"干姜",n:2,desc:"Hot — stronger and more warming than fresh ginger.",balance:["mung bean","green tea"],tip:""},
+  lamb:{zh:"羊肉",n:2,desc:"Deeply warming — the classic winter meat to fight cold limbs.",balance:["white radish","mung bean","chrysanthemum tea"],tip:"Stew lamb with white radish; it tames the heat so you don't get a sore throat."},
+  mutton:{zh:"羊肉",n:2,desc:"Deeply warming — fights cold and weak limbs in winter.",balance:["white radish","mung bean"],tip:""},
+  trout:{zh:"鳟鱼",n:2,desc:"Warming — tonifies and builds strength.",balance:["white radish","cucumber"],tip:""},
+  garlic:{zh:"蒜",n:2,desc:"Hot and pungent — warms the body and fights damp.",balance:["cucumber","tofu","spinach"],tip:"A little goes far — too much heats the blood."},
+  fennelseed:{zh:"茴香",n:2,desc:"Hot — warms the middle and disperses cold pain.",balance:["pear","mung bean"],tip:""},
+  brownsugar:{zh:"红糖",n:2,desc:"Warming — invigorates blood, traditional for cramps.",balance:["green tea"],tip:"Grandma gives brown sugar ginger tea for period cramps."},
+  coffee:{zh:"咖啡",n:2,desc:"Hot and drying — stimulating, can stir up internal fire.",balance:["pear","chrysanthemum tea"],tip:""},
+  spirits:{zh:"白酒",n:2,desc:"Hot — strong liquor heats the blood quickly.",balance:["green tea","mung bean"],tip:""},
+
+  // ===== WARM (n:1) =====
+  ginger:{zh:"姜",n:1,desc:"Warming and pungent — dispels cold, settles the stomach, kicks off a sweat.",balance:["mung bean","cucumber","green tea"],tip:"Grandma drinks ginger tea when she feels a chill coming on."},
+  beef:{zh:"牛肉",n:1,desc:"Warming and strengthening — builds qi and blood.",balance:["white radish","spinach","tomato"],tip:""},
+  chicken:{zh:"鸡肉",n:1,desc:"Warm — nourishing and gentle, good for recovery.",balance:["mung bean","cucumber","winter melon"],tip:"Grandma makes chicken soup when you're worn out."},
+  shrimp:{zh:"虾",n:1,desc:"Warming — tonifies yang.",balance:["cucumber","tofu","white radish"],tip:""},
+  walnut:{zh:"核桃",n:1,desc:"Warm — nourishes the brain and kidneys.",balance:["pear","green tea"],tip:""},
+  glutinousrice:{zh:"糯米",n:1,desc:"Warming and sticky — strengthens the spleen but heavy to digest.",balance:["white radish","green tea"],tip:""},
+  scallion:{zh:"葱",n:1,desc:"Warm and pungent — induces sweating, good at the start of a cold.",balance:["cucumber","tofu"],tip:""},
+  leek:{zh:"韭菜",n:1,desc:"Warming — tonifies yang and the kidneys.",balance:["mung bean","white radish"],tip:""},
+  mustardgreen:{zh:"芥菜",n:1,desc:"Warm — moves qi and clears phlegm.",balance:["pear","cucumber"],tip:""},
+  pumpkin:{zh:"南瓜",n:1,desc:"Warm — strengthens the spleen and stomach.",balance:["green tea","cucumber"],tip:""},
+  cherry:{zh:"樱桃",n:1,desc:"Warm — nourishes blood, warms the limbs.",balance:["pear","green tea"],tip:""},
+  peach:{zh:"桃子",n:1,desc:"Warm — generates fluids but heating in excess.",balance:["green tea"],tip:""},
+  longan:{zh:"龙眼",n:1,desc:"Warm — nourishes blood and calms the mind.",balance:["chrysanthemum tea","pear"],tip:"Too many longans and grandma says you'll get a sore throat."},
+  lychee:{zh:"荔枝",n:1,desc:"Warm — sweet and heating, easy to overdo.",balance:["green tea","mung bean"],tip:""},
+  durian:{zh:"榴莲",n:1,desc:"Warming and rich — strongly heating.",balance:["mangosteen","mung bean"],tip:"Eat mangosteen after durian to cool the heat — an old pairing."},
+  date:{zh:"红枣",n:1,desc:"Warm — tonifies qi and blood, classic in soups.",balance:["chrysanthemum tea","green tea"],tip:""},
+  reddates:{zh:"红枣",n:1,desc:"Warm — tonifies qi and blood, sweet and nourishing.",balance:["chrysanthemum tea"],tip:""},
+  vinegar:{zh:"醋",n:1,desc:"Warm and sour — moves blood, aids digestion.",balance:["cucumber"],tip:""},
+  rosemary:{zh:"迷迭香",n:1,desc:"Warm aromatic — moves qi.",balance:["cucumber"],tip:""},
+  basil:{zh:"罗勒",n:1,desc:"Warm aromatic — disperses cold and damp.",balance:["cucumber"],tip:""},
+  nutmeg:{zh:"肉豆蔻",n:1,desc:"Warm — warms the spleen, settles the gut.",balance:["pear"],tip:""},
+  clove:{zh:"丁香",n:1,desc:"Warm — warms the middle, eases nausea from cold.",balance:["pear"],tip:""},
+  brownrice:{zh:"糙米",n:1,desc:"Warm — strengthens digestion, wholesome staple.",balance:["white radish"],tip:""},
+  oat:{zh:"燕麦",n:1,desc:"Warm — strengthens qi, calms the gut.",balance:["pear"],tip:""},
+  mussel:{zh:"贻贝",n:1,desc:"Warm — tonifies the kidneys and blood.",balance:["white radish"],tip:""},
+  eel:{zh:"鳝鱼",n:1,desc:"Warm — strongly tonifying, builds qi and blood.",balance:["cucumber"],tip:""},
+  chestnut:{zh:"栗子",n:1,desc:"Warm — tonifies kidneys and strengthens the back.",balance:["green tea"],tip:""},
+  pinenut:{zh:"松子",n:1,desc:"Warm — moistens and nourishes.",balance:["green tea"],tip:""},
+  hotdog:{zh:"热狗",n:1,desc:"Warm — processed meat and bread, considered heating and damp-forming, hard to digest.",balance:["white radish","green tea","cucumber"],tip:"Grandma says too much processed meat brings on 上火 (shàng huǒ — 'internal heat', the flushed, inflamed feeling) — chase it with radish or green tea."},
+  sausage:{zh:"香肠",n:1,desc:"Warm — cured, salty and heating, damp-forming.",balance:["white radish","green tea"],tip:""},
+  jasminetea:{zh:"茉莉花茶",n:1,desc:"Warm — moves qi and lifts the mood.",balance:["pear"],tip:""},
+  apricot:{zh:"杏",n:1,desc:"Warm — moistens the lungs but heating in excess.",balance:["pear"],tip:""},
+
+  // ===== NEUTRAL (n:0) =====
+  rice:{zh:"米饭",n:0,desc:"Neutral — the gentle everyday base that suits everyone.",balance:[],tip:"Neutral foods need no balancing — they're the peacekeepers of the bowl."},
+  egg:{zh:"鸡蛋",n:0,desc:"Neutral — nourishing and balanced.",balance:[],tip:""},
+  carrot:{zh:"胡萝卜",n:0,desc:"Neutral — supports digestion, good for the eyes.",balance:[],tip:""},
+  potato:{zh:"土豆",n:0,desc:"Neutral — calms and strengthens the stomach.",balance:[],tip:""},
+  sweetpotato:{zh:"红薯",n:0,desc:"Neutral — strengthens the spleen, gentle and filling.",balance:[],tip:""},
+  pork:{zh:"猪肉",n:0,desc:"Neutral to slightly cool — moistening and nourishing.",balance:["ginger","garlic"],tip:""},
+  honey:{zh:"蜂蜜",n:0,desc:"Neutral — moistens dryness and soothes.",balance:[],tip:""},
+  apple:{zh:"苹果",n:0,desc:"Neutral to cool — moistens the lungs.",balance:[],tip:""},
+  corn:{zh:"玉米",n:0,desc:"Neutral — drains damp and supports digestion.",balance:[],tip:""},
+  grape:{zh:"葡萄",n:0,desc:"Neutral — tonifies qi and blood, strengthens tendons.",balance:[],tip:""},
+  plum:{zh:"李子",n:0,desc:"Neutral — generates fluids, aids digestion.",balance:[],tip:""},
+  pineapple:{zh:"菠萝",n:0,desc:"Neutral — aids digestion and clears summer thirst.",balance:[],tip:""},
+  fig:{zh:"无花果",n:0,desc:"Neutral — moistens the gut, soothes the throat.",balance:[],tip:""},
+  olive:{zh:"橄榄",n:0,desc:"Neutral — soothes the throat, generates fluids.",balance:[],tip:""},
+  peanut:{zh:"花生",n:0,desc:"Neutral — nourishes and moistens, aids milk supply.",balance:[],tip:""},
+  blackbean:{zh:"黑豆",n:0,desc:"Neutral — tonifies the kidneys, builds blood.",balance:[],tip:""},
+  soybean:{zh:"黄豆",n:0,desc:"Neutral — strengthens the spleen, builds qi.",balance:[],tip:""},
+  redbean:{zh:"红豆",n:0,desc:"Neutral — drains damp and swelling, nourishes blood.",balance:[],tip:""},
+  chickpea:{zh:"鹰嘴豆",n:0,desc:"Neutral — strengthens digestion.",balance:[],tip:""},
+  cabbage:{zh:"卷心菜",n:0,desc:"Neutral — strengthens the stomach, calms the gut.",balance:[],tip:""},
+  greenbean:{zh:"四季豆",n:0,desc:"Neutral — strengthens the spleen, drains damp.",balance:[],tip:""},
+  shiitake:{zh:"香菇",n:0,desc:"Neutral — tonifies qi, supports immunity.",balance:[],tip:""},
+  blackfungus:{zh:"木耳",n:0,desc:"Neutral — nourishes and cools the blood, moistens.",balance:[],tip:""},
+  beef_liver:{zh:"牛肝",n:0,desc:"Neutral — nourishes blood and the liver, good for the eyes.",balance:[],tip:""},
+  goose:{zh:"鹅肉",n:0,desc:"Neutral — tonifies qi, generates fluids.",balance:[],tip:""},
+  herring:{zh:"鲱鱼",n:0,desc:"Neutral — tonifies qi and blood.",balance:[],tip:""},
+  carp:{zh:"鲤鱼",n:0,desc:"Neutral — drains damp and swelling, good in pregnancy soups.",balance:[],tip:""},
+  salmon:{zh:"三文鱼",n:0,desc:"Neutral to warm — tonifies qi, nourishing.",balance:["cucumber"],tip:""},
+  tuna:{zh:"金枪鱼",n:0,desc:"Neutral — builds qi and blood.",balance:[],tip:""},
+  milk:{zh:"牛奶",n:0,desc:"Neutral — moistens and nourishes, but damp-forming for some.",balance:["ginger"],tip:""},
+  cheese:{zh:"奶酪",n:0,desc:"Neutral — nourishing but rich and damp-forming.",balance:["green tea"],tip:""},
+  butter:{zh:"黄油",n:0,desc:"Neutral — moistens dryness, rich.",balance:["green tea"],tip:""},
+  almond:{zh:"杏仁",n:0,desc:"Neutral — moistens the lungs, eases cough.",balance:[],tip:""},
+  sesame:{zh:"芝麻",n:0,desc:"Neutral — moistens the gut, nourishes blood and hair.",balance:[],tip:""},
+  blacksesame:{zh:"黑芝麻",n:0,desc:"Neutral — nourishes the kidneys, blood, and hair.",balance:[],tip:""},
+  bread:{zh:"面包",n:0,desc:"Neutral — wheat-based staple, mild and filling.",balance:[],tip:""},
+  noodle:{zh:"面条",n:0,desc:"Neutral — wheat noodles, gentle everyday staple.",balance:[],tip:""},
+  pasta:{zh:"意面",n:0,desc:"Neutral — wheat-based, mild and filling.",balance:[],tip:""},
+  taro:{zh:"芋头",n:0,desc:"Neutral — strengthens the spleen, filling.",balance:[],tip:""},
+  yam:{zh:"山药",n:0,desc:"Neutral — tonifies spleen, lungs and kidneys, very gentle.",balance:[],tip:"A favorite in grandma's tonic soups."},
+  pea:{zh:"豌豆",n:0,desc:"Neutral — strengthens digestion, drains damp.",balance:[],tip:""},
+  beetroot:{zh:"甜菜根",n:0,desc:"Neutral — nourishes and moves blood.",balance:[],tip:""},
+  lotusroot:{zh:"莲藕",n:0,desc:"Neutral — cooked it nourishes blood; raw it cools and clears heat.",balance:[],tip:""},
+  oliveoil:{zh:"橄榄油",n:0,desc:"Neutral — moistens the gut.",balance:[],tip:""},
+  whitefish:{zh:"白鱼",n:0,desc:"Neutral — gentle protein, easy to digest.",balance:[],tip:""},
+  quail:{zh:"鹌鹑",n:0,desc:"Neutral — tonifies qi, gentle and nourishing.",balance:[],tip:""},
+
+  // ===== COOL (n:-1) =====
+  cucumber:{zh:"黄瓜",n:-1,desc:"Cooling — clears heat and hydrates.",balance:["ginger","garlic","black pepper"],tip:"Perfect summer balance to anything spicy."},
+  greentea:{zh:"绿茶",n:-1,desc:"Cool — clears heat and refreshes the mind.",balance:["ginger","red dates"],tip:""},
+  spinach:{zh:"菠菜",n:-1,desc:"Cool — moistens and cools the blood.",balance:["ginger","garlic"],tip:""},
+  pear:{zh:"梨",n:-1,desc:"Cool — moistens the lungs, soothes a dry cough.",balance:["ginger","cinnamon"],tip:"Steam pear with rock sugar and a little ginger for a cough."},
+  tofu:{zh:"豆腐",n:-1,desc:"Cool — clears heat, gentle protein.",balance:["ginger","garlic","chili"],tip:"Always pair tofu with a little ginger or scallion."},
+  duck:{zh:"鸭肉",n:-1,desc:"Cool — nourishes yin, good in summer.",balance:["ginger","white radish"],tip:""},
+  whiteradish:{zh:"白萝卜",n:-1,desc:"Cool — moves qi, breaks down rich heavy food.",balance:["ginger","lamb"],tip:"The classic partner for lamb stew."},
+  celery:{zh:"芹菜",n:-1,desc:"Cool — clears heat, calms the liver, lowers a flushed face.",balance:["ginger"],tip:""},
+  lettuce:{zh:"生菜",n:-1,desc:"Cool — clears heat, promotes urination.",balance:["ginger"],tip:""},
+  eggplant:{zh:"茄子",n:-1,desc:"Cool — clears heat and moves blood.",balance:["ginger","garlic"],tip:""},
+  tomato:{zh:"番茄",n:-1,desc:"Cool — generates fluids, clears heat, aids digestion.",balance:["ginger"],tip:""},
+  mushroom:{zh:"蘑菇",n:-1,desc:"Cool — clears heat, supports immunity.",balance:["ginger"],tip:""},
+  broccoli:{zh:"西兰花",n:-1,desc:"Cool — clears heat, supports digestion.",balance:["ginger","garlic"],tip:""},
+  cauliflower:{zh:"花椰菜",n:-1,desc:"Cool — clears heat, gentle on the gut.",balance:["ginger"],tip:""},
+  bokchoy:{zh:"白菜",n:-1,desc:"Cool — clears heat, moistens the gut.",balance:["ginger","garlic"],tip:""},
+  napacabbage:{zh:"大白菜",n:-1,desc:"Cool — clears heat, soothes the throat.",balance:["ginger"],tip:""},
+  zucchini:{zh:"西葫芦",n:-1,desc:"Cool — clears heat and hydrates.",balance:["ginger"],tip:""},
+  orange:{zh:"橙子",n:-1,desc:"Cool — generates fluids, but phlegm-forming in excess.",balance:["ginger"],tip:""},
+  tangerine:{zh:"橘子",n:-1,desc:"Cool — generates fluids; the dried peel is warming.",balance:["ginger"],tip:""},
+  strawberry:{zh:"草莓",n:-1,desc:"Cool — generates fluids, clears mild heat.",balance:["ginger"],tip:""},
+  mango:{zh:"芒果",n:-1,desc:"Cool — generates fluids; damp-forming for some.",balance:["ginger"],tip:""},
+  loquat:{zh:"枇杷",n:-1,desc:"Cool — moistens the lungs, eases cough.",balance:["ginger"],tip:""},
+  millet:{zh:"小米",n:-1,desc:"Cool — strengthens the spleen, soothes the stomach.",balance:["ginger"],tip:"Grandma's millet porridge settles an upset stomach."},
+  barley:{zh:"大麦",n:-1,desc:"Cool — drains damp, clears heat.",balance:["ginger"],tip:""},
+  buckwheat:{zh:"荞麦",n:-1,desc:"Cool — clears heat, descends qi.",balance:["ginger"],tip:""},
+  wheat:{zh:"小麦",n:-1,desc:"Cool — calms the spirit, nourishes the heart.",balance:["ginger"],tip:""},
+  rabbit:{zh:"兔肉",n:-1,desc:"Cool — clears heat, lean and light.",balance:["ginger"],tip:""},
+  oyster:{zh:"牡蛎",n:-1,desc:"Cool — nourishes yin and calms the spirit.",balance:["ginger"],tip:""},
+  clam:{zh:"蛤蜊",n:-1,desc:"Cool — clears heat, nourishes yin.",balance:["ginger"],tip:""},
+  apple_cool:{zh:"苹果",n:-1,desc:"Cool — moistens the lungs, generates fluids.",balance:["ginger"],tip:""},
+  chrysanthemumtea:{zh:"菊花茶",n:-1,desc:"Cool — clears heat from the eyes and head.",balance:["red dates","ginger"],tip:""},
+  wheatgerm:{zh:"麦芽",n:-1,desc:"Cool — aids digestion of starches.",balance:["ginger"],tip:""},
+  yogurt:{zh:"酸奶",n:-1,desc:"Cool — generates fluids, aids digestion.",balance:["ginger"],tip:""},
+  sproutbean:{zh:"豆芽",n:-1,desc:"Cool — clears heat and damp.",balance:["ginger"],tip:""},
+  radishgreen:{zh:"萝卜叶",n:-1,desc:"Cool — clears heat, moves qi.",balance:["ginger"],tip:""},
+
+  // ===== COLD (n:-2) =====
+  mungbean:{zh:"绿豆",n:-2,desc:"Cold — the great detoxifier, clears summer heat.",balance:["ginger","red dates","cinnamon"],tip:"Mung bean soup is grandma's cure for a hot, irritable day."},
+  watermelon:{zh:"西瓜",n:-2,desc:"Cold — clears heat fast, deeply hydrating.",balance:["ginger","red dates"],tip:"Don't eat too much on a cold stomach — pair with warming food."},
+  crab:{zh:"螃蟹",n:-2,desc:"Cold — clears heat but hard on the digestion.",balance:["ginger","cinnamon","yellow wine"],tip:"Always eat crab with ginger and warm wine — never alone."},
+  bittermelon:{zh:"苦瓜",n:-2,desc:"Cold — strongly clears heat and 'fire'.",balance:["ginger","garlic","chili"],tip:""},
+  banana:{zh:"香蕉",n:-2,desc:"Cold — moistens the intestines, cooling.",balance:["cinnamon","ginger"],tip:""},
+  seaweed:{zh:"海带",n:-2,desc:"Cold — clears heat and softens hardness.",balance:["ginger","garlic"],tip:""},
+  wintermelon:{zh:"冬瓜",n:-2,desc:"Cold — drains damp and clears summer heat.",balance:["ginger"],tip:""},
+  grapefruit:{zh:"柚子",n:-2,desc:"Cold — clears heat and phlegm, aids digestion.",balance:["ginger"],tip:""},
+  persimmon:{zh:"柿子",n:-2,desc:"Cold — clears heat, moistens lungs; harsh on an empty stomach.",balance:["ginger","cinnamon"],tip:"Never eat persimmon on an empty stomach, grandma warns."},
+  kiwi:{zh:"猕猴桃",n:-2,desc:"Cold — clears heat, generates fluids.",balance:["ginger"],tip:""},
+  starfruit:{zh:"杨桃",n:-2,desc:"Cold — clears heat, quenches thirst.",balance:["ginger"],tip:""},
+  mangosteen:{zh:"山竹",n:-2,desc:"Cold — clears heat; the classic foil to durian.",balance:["ginger"],tip:""},
+  cantaloupe:{zh:"哈密瓜",n:-2,desc:"Cold — clears summer heat, hydrating.",balance:["ginger"],tip:""},
+  tomato_cold:{zh:"番茄",n:-2,desc:"Cold — generates fluids, clears heat.",balance:["ginger"],tip:""},
+  saltkelp:{zh:"紫菜",n:-2,desc:"Cold — clears heat, softens lumps.",balance:["ginger"],tip:""},
+  waterchestnut:{zh:"荸荠",n:-2,desc:"Cold — clears heat, moistens, eases phlegm.",balance:["ginger"],tip:""},
+  bamboo:{zh:"竹笋",n:-2,desc:"Cold — clears heat and phlegm; rough on weak digestion.",balance:["ginger"],tip:""},
+  saltedgreens:{zh:"咸菜",n:-2,desc:"Cold — pickled, clears heat but very salty.",balance:["ginger"],tip:""},
+  greentea_strong:{zh:"浓绿茶",n:-2,desc:"Cold — strong green tea is quite chilling to the gut.",balance:["ginger","red dates"],tip:""},
+  saltwater:{zh:"盐水",n:-2,desc:"Cold — clears heat, descends fire.",balance:["ginger"],tip:""},
+  snail:{zh:"田螺",n:-2,desc:"Cold — clears heat, drains damp.",balance:["ginger","chili"],tip:""},
+  clamcold:{zh:"蚌",n:-2,desc:"Cold — clears heat, nourishes yin.",balance:["ginger"],tip:""},
+  icecream:{zh:"冰淇淋",n:-2,desc:"Cold and damp — chills the stomach and weakens digestion.",balance:["ginger"],tip:"Grandma frowns at cold desserts — warm tea after helps."},
+  soysauce:{zh:"酱油",n:-2,desc:"Cold — clears heat, but salty.",balance:["ginger"],tip:""},
+  lotusseed:{zh:"莲子",n:0,desc:"Neutral — calms the spirit, strengthens the spleen and kidneys.",balance:[],tip:""},
+  // ===== FRIED / GREASY (heating, damp-forming) =====
+  fries:{zh:"薯条",n:1,desc:"Warm and greasy — deep-frying turns the mild potato heating and damp-forming.",balance:["white radish","green tea","cucumber"],tip:"Grandma says fried food brings 上火 (shàng huǒ — 'internal heat': sore throat, breakouts) — chase it with radish or strong tea."},
+  potatochips:{zh:"薯片",n:1,desc:"Warm, dry and greasy — fried and salty, easily stirs up internal heat.",balance:["green tea","pear","white radish"],tip:"A pear or some tea after settles the dryness."},
+  friedchicken:{zh:"炸鸡",n:2,desc:"Hot and greasy — frying makes already-warm chicken strongly heating.",balance:["white radish","mung bean","green tea"],tip:""},
+  tempura:{zh:"天妇罗",n:1,desc:"Warm and oily — battered and fried, damp-forming.",balance:["white radish","green tea"],tip:""},
+  springroll:{zh:"春卷",n:1,desc:"Warm and greasy when fried — heating and damp.",balance:["white radish","green tea"],tip:""},
+  donut:{zh:"甜甜圈",n:1,desc:"Warm — fried dough plus sugar, heating and damp-forming.",balance:["green tea","pear"],tip:""},
+  friedfood:{zh:"油炸食物",n:1,desc:"Warm and damp — deep-frying adds heat and grease to almost anything.",balance:["white radish","green tea","cucumber"],tip:"The classic remedy for greasy food is radish or strong tea."},
+  chips:{zh:"薯片",n:1,desc:"Warm, dry and greasy — fried and salty, easily stirs up internal heat.",balance:["green tea","pear","white radish"],tip:"A pear or some tea after settles the dryness."},
+  friedfish:{zh:"炸鱼",n:1,desc:"Warm and greasy — frying turns otherwise-neutral fish heating and damp-forming.",balance:["white radish","green tea","ginger"],tip:"Grandma squeezes lemon and adds ginger to cut the grease."},
+  spam:{zh:"午餐肉",n:1,desc:"Warm — canned, salty, fatty processed meat; heating and damp-forming.",balance:["white radish","green tea","cucumber"],tip:"Very salty and rich — pair with radish or tea to lighten it."},
+  // ===== BAKED SWEETS (warm, sweet, damp-forming) =====
+  cake:{zh:"蛋糕",n:1,desc:"Warm — baked flour, sugar and fat; sweet and rich, damp- and phlegm-forming in excess.",balance:["green tea","chrysanthemum tea","pear"],tip:"Grandma sips bitter tea with sweet cake to balance the richness."},
+  cookie:{zh:"饼干",n:1,desc:"Warm and dry — baked sugar and butter; heating and drying if you eat a lot.",balance:["green tea","pear"],tip:""},
+  biscuit:{zh:"饼干",n:1,desc:"Warm and dry — baked, sweet and crumbly; drying in excess.",balance:["green tea","pear"],tip:""},
+  chocolate:{zh:"巧克力",n:1,desc:"Warm — sweet, rich and stimulating; heating and easy to overdo.",balance:["green tea","pear"],tip:""},
+  pastry:{zh:"糕点",n:1,desc:"Warm — buttery baked dough and sugar; rich and damp-forming.",balance:["green tea","chrysanthemum tea"],tip:""},
+  muffin:{zh:"松饼",n:1,desc:"Warm — baked flour, sugar and fat; sweet and filling.",balance:["green tea","pear"],tip:""},
+  candy:{zh:"糖果",n:1,desc:"Warm — concentrated sugar; sweet and heating, damp-forming.",balance:["green tea","pear"],tip:""},
+};
+const ALIAS={
+  "spring onion":"scallion","green onion":"scallion","scallions":"scallion",
+  "hot pepper":"chili","chilli":"chili","chillies":"chili","chili pepper":"chili","chilli pepper":"chili","red pepper":"chili","cayenne":"chili",
+  "red meat":"beef","steak":"beef","prawn":"shrimp","prawns":"shrimp","shrimps":"shrimp",
+  "white rice":"rice","steamed rice":"rice","glutinous rice":"glutinousrice","sticky rice":"glutinousrice","mochi rice":"glutinousrice","brown rice":"brownrice",
+  "bean curd":"tofu","soy bean curd":"tofu","green tea":"greentea","matcha":"greentea",
+  "mung beans":"mungbean","mung bean":"mungbean","green bean soup":"mungbean",
+  "white radish":"whiteradish","daikon":"whiteradish","mooli":"whiteradish",
+  "bitter melon":"bittermelon","bitter gourd":"bittermelon","winter melon":"wintermelon","wax gourd":"wintermelon",
+  "hot dog":"hotdog","frankfurter":"hotdog","wiener":"hotdog","corn dog":"hotdog",
+  "sweet potato":"sweetpotato","yam potato":"yam","chinese yam":"yam",
+  "black pepper":"blackpepper","peppercorn":"blackpepper","dry ginger":"drygiinger","dried ginger":"drygiinger",
+  "red dates":"reddates","red date":"reddates","jujube":"reddates","jujubes":"reddates","date":"reddates","dates":"reddates",
+  "black bean":"blackbean","black beans":"blackbean","soy bean":"soybean","soybeans":"soybean","soya bean":"soybean",
+  "red bean":"redbean","red beans":"redbean","adzuki":"redbean","azuki":"redbean","kidney bean":"redbean",
+  "chick pea":"chickpea","garbanzo":"chickpea","green beans":"greenbean","string bean":"greenbean","french bean":"greenbean",
+  "shiitake mushroom":"shiitake","black fungus":"blackfungus","wood ear":"blackfungus","cloud ear":"blackfungus",
+  "bok choy":"bokchoy","pak choi":"bokchoy","napa cabbage":"napacabbage","chinese cabbage":"napacabbage",
+  "spring greens":"cabbage","green cabbage":"cabbage","mustard green":"mustardgreen","mustard greens":"mustardgreen",
+  "lotus root":"lotusroot","lotus seed":"lotusseed","water chestnut":"waterchestnut","bamboo shoot":"bamboo","bamboo shoots":"bamboo",
+  "chrysanthemum tea":"chrysanthemumtea","jasmine tea":"jasminetea","ice cream":"icecream","soy sauce":"soysauce",
+  "olive oil":"oliveoil","bean sprout":"sproutbean","bean sprouts":"sproutbean","beansprout":"sproutbean",
+  "black sesame":"blacksesame","pine nut":"pinenut","green tea strong":"greentea_strong",
+  "salmon fillet":"salmon","white fish":"whitefish","sea bass":"whitefish","cod":"whitefish",
+  "beef liver":"beef_liver","liver":"beef_liver","goose meat":"goose","duck meat":"duck",
+  "egg yolk":"egg","eggs":"egg","chicken egg":"egg","milk tea":"milk","cow milk":"milk","whole milk":"milk",
+  "cheddar":"cheese","spaghetti":"pasta","macaroni":"pasta","noodles":"noodle","ramen":"noodle","udon":"noodle",
+  "potatoes":"potato","french fries":"fries","french fry":"fries","chips fries":"fries","mashed potato":"potato","boiled potato":"potato","baked potato":"potato",
+  "potato chips":"potatochips","potato crisps":"potatochips","crisps":"potatochips","fried chicken":"friedchicken","kfc":"friedchicken",
+  "fried fish":"friedfish","fish fry":"friedfish","battered fish":"friedfish","fish and chips":"friedfish","luncheon meat":"spam","canned meat":"spam","spam musubi":"spam",
+  "cookies":"cookie","biscuits":"biscuit","cupcake":"muffin","cupcakes":"muffin","muffins":"muffin","cakes":"cake","birthday cake":"cake","chocolate cake":"cake","pastries":"pastry","croissant":"pastry","danish":"pastry","sweets":"candy","candies":"candy","lolly":"candy","chocolate bar":"chocolate","brownie":"cake","brownies":"cake",
+  "spring rolls":"springroll","egg roll":"springroll","egg rolls":"springroll","doughnut":"donut","donuts":"donut","fried food":"friedfood","deep fried":"friedfood","fried":"friedfood","tempura prawn":"tempura","french fries large":"fries",
+  "tomatoes":"tomato","apples":"apple","oranges":"orange","grapes":"grape","bananas":"banana",
+  "lamb meat":"lamb","mutton meat":"mutton","goat":"lamb","goat meat":"lamb",
+  "brown sugar":"brownsugar","cane sugar":"brownsugar","fennel":"fennelseed","fennel seed":"fennelseed",
+  "whisky":"spirits","whiskey":"spirits","vodka":"spirits","baijiu":"spirits","liquor":"spirits","rice wine":"spirits","yellow wine":"spirits",
+  "black tea":"jasminetea","oolong":"jasminetea"
+};
+const NAMES={hot:"Hot 热",warm:"Warm 温",neutral:"Neutral 平",cool:"Cool 凉",cold:"Cold 寒"};
+function natureKey(n){return ["cold","cool","neutral","warm","hot"][n+2];}
+function norm(s){return s.toLowerCase().trim().replace(/\s+/g," ");}
+function find(q){
+  q=norm(q);
+  if(ALIAS[q])q=ALIAS[q];
+  let k=q.replace(/[^a-z0-9]/g,"");
+  if(DB[k])return[k,DB[k]];           // exact key
+  if(ALIAS[k]&&DB[ALIAS[k]])return[ALIAS[k],DB[ALIAS[k]]];
+  // strict: only match when the query equals a key plus a trivial plural/suffix, or vice versa
+  for(const key in DB){
+    const base=key.split("_")[0];
+    if(k===base||k===base+"s"||k+"s"===base)return[key,DB[key]];
+  }
+  return null;                         // no loose substring fallback
+}
+
+function card(key,f){
+  const nk=natureKey(f.n);
+  const pct=((f.n+2)/4)*100;
+  const bal=f.balance.length?f.balance.map(b=>{const t=find(b);const label=t?t[0]:b;const disp=t?(t[1].zh?b+' '+t[1].zh:b):b;return `<span class="balance-item" onclick="setQ('${b}')">${disp}</span>`}).join(""):'<span class="desc">Already balanced — eat freely.</span>';
+  return `<div class="card">
+    <div class="card-top">
+      <div class="food-name">${cap(key)}<span class="zh">${f.zh}</span></div>
+      <span class="nature n-${nk}"><span class="dot"></span>${NAMES[nk]}</span>
+    </div>
+    <div class="meter"><div class="pin" style="left:${pct}%"></div></div>
+    <div class="meter-labels"><span>寒 COLD</span><span>平</span><span>HOT 热</span></div>
+    <p class="desc" style="margin-top:18px">${f.desc}</p>
+    <div class="section-label">Eat with — to balance</div>
+    <div class="balance-grid">${bal}</div>
+    ${f.tip?`<div class="grandma"><b>外婆:</b> ${f.tip}</div>`:""}
+  </div>`;
+}
+function cap(s){s=s.split("_")[0];return s.charAt(0).toUpperCase()+s.slice(1);}
+
+function lookup(){
+  const q=document.getElementById("q").value;
+  const r=document.getElementById("results");
+  if(!norm(q)){r.innerHTML='<p class="empty">Type a food and ask grandma.</p>';return;}
+  const hit=find(q);
+  if(hit){r.innerHTML=card(hit[0],hit[1]);}
+  else{r.innerHTML=`<div class="card"><p class="empty">Grandma doesn't have "${q}" in her recipe box yet 🥢<br><br>Try one of the foods below.</p></div>`;}
+}
+function setQ(v){document.getElementById("q").value=v;lookup();window.scrollTo({top:0,behavior:"smooth"});}
+// Render directly from an exact DB key (used by the category dropdown so suffixed keys like apple_cool work)
+function showKey(key){
+  if(!DB[key])return setQ(key);
+  document.getElementById("q").value=cap(key);
+  document.getElementById("results").innerHTML=card(key,DB[key]);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// Build category browser: five nature buttons, each opening a dropdown of its foods
+const NAT_ORDER=[{n:2,key:"hot",label:"Hot 热"},{n:1,key:"warm",label:"Warm 温"},{n:0,key:"neutral",label:"Neutral 平"},{n:-1,key:"cool",label:"Cool 凉"},{n:-2,key:"cold",label:"Cold 寒"}];
+function foodsByNature(n){
+  const seen=new Set(),out=[];
+  for(const key in DB){
+    if(DB[key].n!==n)continue;
+    const name=cap(key);
+    if(seen.has(name))continue;        // skip duplicate display names (e.g. apple_cool)
+    seen.add(name);
+    out.push({key,name,zh:DB[key].zh});
+  }
+  out.sort((a,b)=>a.name.localeCompare(b.name));
+  return out;
+}
+let openNature=null;
+function toggleNature(key){
+  openNature=(openNature===key)?null:key;
+  document.querySelectorAll(".nat-btn").forEach(b=>b.classList.toggle("active",b.dataset.key===openNature));
+  const wrap=document.getElementById("dropdownWrap");
+  if(!openNature){wrap.innerHTML="";return;}
+  const meta=NAT_ORDER.find(x=>x.key===openNature);
+  const items=foodsByNature(meta.n);
+  wrap.innerHTML=`<div class="dropdown"><div class="dd-label">${meta.label} — tap a food</div>`+
+    items.map(f=>`<span class="food-opt" onclick="showKey('${f.key}')"><span class="en">${f.name}</span><span class="zh">${f.zh}</span></span>`).join("")+
+    `</div>`;
+}
+document.getElementById("browse").innerHTML=NAT_ORDER.map(x=>
+  `<button class="nat-btn nb-${x.key}" data-key="${x.key}" onclick="toggleNature('${x.key}')">${x.label}<span class="caret">▾</span></button>`
+).join("");
+document.getElementById("q").addEventListener("keydown",e=>{if(e.key==="Enter")lookup();});
+</script>
+</body>
+</html>
