@@ -73,15 +73,15 @@
     box-shadow:0 4px 0 var(--seal-deep);transition:.1s;
   }
   .search button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--seal-deep)}
-  .browse{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
+  .browse{display:flex;gap:5px;flex-wrap:nowrap;justify-content:center;margin-bottom:14px}
   .nat-btn{
-    padding:9px 18px;border:none;border-radius:30px;cursor:pointer;color:#fff;
-    font-family:'Noto Serif SC',serif;font-weight:600;font-size:15px;transition:.15s;
-    display:inline-flex;align-items:center;gap:7px;opacity:.92;
+    flex:1 1 0;min-width:0;padding:9px 4px;border:none;border-radius:14px;cursor:pointer;color:#fff;
+    font-family:'Noto Serif SC',serif;font-weight:600;font-size:13px;transition:.15s;
+    display:flex;align-items:center;justify-content:center;gap:3px;opacity:.92;white-space:nowrap;
   }
   .nat-btn:hover{opacity:1;transform:translateY(-1px)}
-  .nat-btn.active{box-shadow:0 0 0 3px var(--bg),0 0 0 5px currentColor}
-  .nat-btn .caret{font-size:11px;transition:transform .2s}
+  .nat-btn.active{box-shadow:0 0 0 2px var(--bg),0 0 0 4px currentColor}
+  .nat-btn .caret{font-size:9px;transition:transform .2s}
   .nat-btn.active .caret{transform:rotate(180deg)}
   .nb-hot{background:var(--hot)} .nb-warm{background:var(--warm)}
   .nb-neutral{background:var(--neutral)} .nb-cool{background:var(--cool)} .nb-cold{background:var(--cold)}
@@ -437,7 +437,7 @@ function showKey(key){
 }
 
 // Build category browser: five nature buttons, each opening a dropdown of its foods
-const NAT_ORDER=[{n:2,key:"hot",label:"Hot 热"},{n:1,key:"warm",label:"Warm 温"},{n:0,key:"neutral",label:"Neutral 平"},{n:-1,key:"cool",label:"Cool 凉"},{n:-2,key:"cold",label:"Cold 寒"}];
+const NAT_ORDER=[{n:-2,key:"cold",label:"Cold 寒"},{n:-1,key:"cool",label:"Cool 凉"},{n:0,key:"neutral",label:"Neutral 平"},{n:1,key:"warm",label:"Warm 温"},{n:2,key:"hot",label:"Hot 热"}];
 function foodsByNature(n){
   const seen=new Set(),out=[];
   for(const key in DB){
